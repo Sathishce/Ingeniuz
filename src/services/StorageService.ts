@@ -1,15 +1,14 @@
-import * as SecureStore from "expo-secure-store";
+import * as SecureStore from 'expo-secure-store';
 
-// Interface for storage options (optional)
+// Interface for storage options
 interface StorageOptions {
-  keychainAccessible?: SecureStore.SecureStoreOptions["keychainAccessible"];
+  keychainAccessible?: SecureStore.SecureStoreOptions['keychainAccessible'];
 }
 
 export class StorageService {
-  // Generic SecureStore methods
   async setItem<T>(key: string, value: T, options?: StorageOptions): Promise<void> {
     try {
-      const stringValue = typeof value === "string" ? value : JSON.stringify(value);
+      const stringValue = typeof value === 'string' ? value : JSON.stringify(value);
       await SecureStore.setItemAsync(key, stringValue, options);
     } catch (error) {
       console.error(`Failed to set item for key "${key}":`, error);
@@ -41,16 +40,15 @@ export class StorageService {
     }
   }
 
-  // Lesson points methods (adapted from storage.js)
   async storeLessonPoints(lessonId: string, questionCount: number, points: number): Promise<void> {
     points = (100 / questionCount) * points;
     try {
       const userEmail = await this.getCurrentUserEmail();
-      if (!userEmail || userEmail.trim() === "") {
+      if (!userEmail || userEmail.trim() === '') {
         return;
       }
 
-      const storedData = await this.getItem<Record<string, Record<string, number>>>("lessonPoints");
+      const storedData = await this.getItem<Record<string, Record<string, number>>>('lessonPoints');
       let lessonPoints = storedData || {};
 
       if (!lessonPoints.hasOwnProperty(userEmail)) {
@@ -58,89 +56,89 @@ export class StorageService {
       }
 
       lessonPoints[userEmail][lessonId] = points;
-      await this.setItem("lessonPoints", lessonPoints);
-      await this.getSumOfLessonPoints(userEmail); // Recalculate sum
+      await this.setItem('lessonPoints', lessonPoints);
+      await this.getSumOfLessonPoints(userEmail);
     } catch (error) {
-      console.error("Error storing lesson points:", error);
+      console.error('Error storing lesson points:', error);
       throw error;
     }
   }
 
   async getAllLessonPoints(userEmail: string): Promise<Record<string, number>> {
     try {
-      if (!userEmail || userEmail.trim() === "") {
+      if (!userEmail || userEmail.trim() === '') {
         return {};
       }
 
-      const storedData = await this.getItem<Record<string, Record<string, number>>>("lessonPoints");
+      const storedData = await this.getItem<Record<string, Record<string, number>>>('lessonPoints');
       if (storedData) {
         return storedData[userEmail] || {};
       }
       return {};
     } catch (error) {
-      console.error("Error retrieving all lesson points:", error);
+      console.error('Error retrieving all lesson points:', error);
       throw error;
     }
   }
 
   async getSumOfLessonPoints(userEmail?: string): Promise<number> {
     const email = userEmail || (await this.getCurrentUserEmail());
-    if (!email || email.trim() === "") {
+    if (!email || email.trim() === '') {
       return 0;
     }
 
     try {
-      const storedData = await this.getItem<Record<string, Record<string, number>>>("lessonPoints");
+      const storedData = await this.getItem<Record<string, Record<string, number>>>('lessonPoints');
       if (storedData && storedData.hasOwnProperty(email)) {
         const userLessonPoints = storedData[email];
         return Object.values(userLessonPoints).reduce((acc, val) => acc + (val as number), 0);
       }
       return 0;
     } catch (error) {
-      console.error("Error retrieving sum of lesson points:", error);
+      console.error('Error retrieving sum of lesson points:', error);
       throw error;
     }
   }
 
   async saveCurrentUserEmail(userEmail: string): Promise<void> {
     try {
-      if (!userEmail || userEmail.trim() === "") {
-        throw new Error("User email is undefined or empty");
+      if (!userEmail || userEmail.trim() === '') {
+        throw new Error('User email is undefined or empty');
       }
-      await this.setItem("userEmail", userEmail);
+      await this.setItem('userEmail', userEmail);
     } catch (error) {
-      console.error("Error storing user email:", error);
+      console.error('Error storing user email:', error);
       throw error;
     }
   }
 
   async saveCurrentUserName(userName: string): Promise<void> {
     try {
-      if (!userName || userName.trim() === "") {
-        throw new Error("User name is undefined or empty");
+      if (!userName || userName.trim() === '') {
+        throw new Error('User name is undefined or empty');
       }
-      await this.setItem("userName", userName);
-      console.log("User name saved:", userName);
+      await this.setItem('userName', userName);
+      console.log('User name saved:', userName);
     } catch (error) {
-      console.error("Error storing user name:", error);
+      console.error('Error storing user name:', error);
       throw error;
     }
   }
 
   async getCurrentUserEmail(): Promise<string | null> {
     try {
-      return await this.getItem<string>("userEmail");
+      return await this.getItem<string>('userEmail');
     } catch (error) {
-      console.error("Error retrieving user email:", error);
+      console.error('Error retrieving user email:', error);
       throw error;
     }
   }
 
   async getUserName(): Promise<string | null> {
     try {
-      return await this.getItem<string>("userName");
+      return await this.getItem<string>('userName');
     } catch (error) {
-      console.error("Error retrieving user name:", error);
+      console.error('Error retrieving user name:', error);
       throw error;
     }
   }
@@ -149,7 +147,7 @@ export class StorageService {
 // Singleton instance
 export const storageService = new StorageService();
 
-// Utility functions
+// Utility functions using the singleton
 export const setItem = <T>(key: string, value: T, options?: StorageOptions) =>
   storageService.setItem(key, value, options);
 

@@ -1,10 +1,9 @@
-import { ApolloClient, InMemoryCache, HttpLink,  from } from '@apollo/client';
+import { ApolloClient, InMemoryCache, HttpLink, from } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
 import { setContext } from '@apollo/client/link/context';
-import * as SecureStore from 'expo-secure-store';
 import { Log, LogLevel, createLog } from '../entities/Log';
 import {  getGraphQLEndpoint } from '../config/env';
-import { saveCurrentUserEmail, saveCurrentUserName } from './StorageService';
+import { storageService } from './StorageService'; // Use singleton
 
 const TEST_MODE = false;
 const TEST_TOKEN = '';
@@ -14,7 +13,7 @@ const httpLink = new HttpLink({
 });
 
 const authLink = setContext(async (_, { headers }) => {
-  const token = TEST_MODE ? TEST_TOKEN : await SecureStore.getItemAsync('authToken');
+  const token = TEST_MODE ? TEST_TOKEN : await storageService.getItem<string>('authToken');
   return {
     headers: {
       ...headers,
@@ -45,19 +44,20 @@ export const apolloClient = new ApolloClient({
 });
 
 export async function setToken(token: string, email: string): Promise<void> {
-  await SecureStore.setItemAsync('authToken', token);
-  await setEmail(email);
+  await storageService.setItem('authToken', token);
+  await storageService.saveCurrentUserEmail(email);
+  console.log('User email saved'); // Keep your original log
 }
 
 export async function setEmail(email: string): Promise<void> {
-  await saveCurrentUserEmail(email);
+  await storageService.saveCurrentUserEmail(email);
   console.log('User email saved');
 }
 
 export async function setUserName(userName: string): Promise<void> {
-  await saveCurrentUserName(userName);
+  await storageService.saveCurrentUserName(userName);
 }
 
 export async function removeToken(): Promise<void> {
-  await SecureStore.deleteItemAsync('authToken');
+  await storageService.deleteItem('authToken');
 }
