@@ -10,6 +10,12 @@ export class AuthUseCases {
     private logRepository: ILogRepository
   ) {}
 
+  /**
+   * Login user with email and password.
+   * @param email User's email address
+   * @param password User's password
+   * @returns Promise that resolves to true if the user needs to complete 2FA, false otherwise
+   */
   async login(email: string, password: string): Promise<boolean> {
     await this.logRepository.saveLog({
       timestamp: new Date().toISOString(),
@@ -36,6 +42,13 @@ export class AuthUseCases {
     }
   }
 
+  /**
+   * Registers a new user.
+   * @param username Username chosen by the user
+   * @param email User's email address
+   * @param phone User's phone number
+   * @throws Error if registration fails
+   */
   async register(username: string, email: string, phone: string): Promise<void> {
     await this.logRepository.saveLog({
       timestamp: new Date().toISOString(),
@@ -61,6 +74,13 @@ export class AuthUseCases {
     }
   }
 
+  /**
+   * Completes 2FA for a user.
+   * @param email User's email address
+   * @param emailOtp The one-time password sent to the user's email
+   * @param smsOtp The one-time password sent to the user's phone
+   * @returns The user object with a valid token if the 2FA is successful, or throws an error if the 2FA fails
+   */
   async completeTwoFactor(email: string, emailOtp: string, smsOtp: string): Promise<User> {
     await this.logRepository.saveLog({
       timestamp: new Date().toISOString(),
@@ -90,6 +110,11 @@ export class AuthUseCases {
     }
   }
 
+  /**
+   * Checks if the user with the given email is the first user.
+   * @param email User's email address
+   * @returns True if the user is the first user, false otherwise
+   */
   async isFirstUser(email: string): Promise<boolean> {
     await this.logRepository.saveLog({
       timestamp: new Date().toISOString(),

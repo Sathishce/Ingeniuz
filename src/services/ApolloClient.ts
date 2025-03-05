@@ -43,21 +43,38 @@ export const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
+/**
+ * Stores the given token and email in local storage.
+ * @param token The JWT token to store.
+ * @param email The associated email address of the user.
+ */
 export async function setToken(token: string, email: string): Promise<void> {
   await storageService.setItem('authToken', token);
   await storageService.saveCurrentUserEmail(email);
   console.log('User email saved'); // Keep your original log
 }
 
+/**
+ * Stores the given email address in local storage.
+ * @param email The email address of the user.
+ */
 export async function setEmail(email: string): Promise<void> {
   await storageService.saveCurrentUserEmail(email);
   console.log('User email saved');
 }
 
+/**
+ * Stores the given user name in local storage.
+ * @param userName The user name to store.
+ */
+
 export async function setUserName(userName: string): Promise<void> {
   await storageService.saveCurrentUserName(userName);
 }
 
+/**
+ * Removes the JWT token from local storage.
+ */
 export async function removeToken(): Promise<void> {
   await storageService.deleteItem('authToken');
 }

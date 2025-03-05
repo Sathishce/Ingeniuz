@@ -71,21 +71,56 @@ export const useUser = (email: string) => {
   return { loading, error, user: data?.user };
 };
 
+/**
+ * Hook to log in a user.
+ *
+ * @returns an object with the following properties:
+ * - `login`: a function that accepts an object with `email` and `password` properties and returns a promise that resolves to a boolean indicating whether the login was successful.
+ * - `loading`: a boolean indicating whether the mutation is in progress.
+ * - `error`: an error object if the mutation failed.
+ */
 export const useLoginUser = () => {
   const [login, { loading, error }] = useMutation(LOGIN_USER, { client: apolloClient });
   return { login, loading, error };
 };
 
+/**
+ * Hook to register a new user.
+ *
+ * @returns an object with the following properties:
+ * - `register`: a function that accepts an object with `username`, `email`, and `phone` properties and returns a promise that resolves if the registration is successful.
+ * - `loading`: a boolean indicating whether the mutation is in progress.
+ * - `error`: an error object if the mutation failed.
+ */
 export const useRegisterUser = () => {
   const [register, { loading, error }] = useMutation(REGISTER_USER, { client: apolloClient });
   return { register, loading, error };
 };
 
+/*************  ✨ Codeium Command ⭐  *************/
+/**
+ * Hook to complete the two-factor authentication process.
+ *
+ * @returns an object with the following properties:
+ * - `completeTwoFactor`: a function that accepts an object with `email`, `emailOtp`, and `smsOtp` properties and returns a promise that resolves to the user object for the authenticated user.
+ * - `loading`: a boolean indicating whether the mutation is in progress.
+ * - `error`: an error object if the mutation failed.
+ */
+/******  eda248cf-7972-41ab-b951-8a022404d2c3  *******/
 export const useCompleteTwoFactor = () => {
   const [completeTwoFactor, { loading, error }] = useMutation(COMPLETE_TWO_FACTOR, { client: apolloClient });
   return { completeTwoFactor, loading, error };
 };
 
+/**
+ * Hook to determine if a user has logged in for the first time.
+ *
+ * @param email the email address of the user.
+ * @returns an object with the following properties:
+ * - `isFirstLogin`: a boolean indicating whether the user has logged in for the first time.
+ * - `loading`: a boolean indicating whether the query is in progress.
+ * - `error`: an error object if the query failed.
+ */
 export const useIsFirstUser = (email: string) => {
   const { data, loading, error } = useQuery(IS_FIRST_USER, {
     client: apolloClient,
@@ -94,10 +129,29 @@ export const useIsFirstUser = (email: string) => {
   return { isFirstLogin: data?.getIsFirstLogin, loading, error };
 };
 
+/**
+ * Hook to update the "first login" flag for a user.
+ *
+ * @returns an object with the following properties:
+ * - `updateFirstLogin`: a function that accepts an object with `email` and `isFirstLogin` properties and returns a promise that resolves if the mutation is successful.
+ * - `loading`: a boolean indicating whether the mutation is in progress.
+ * - `error`: an error object if the mutation failed.
+ * - `data`: the result of the mutation, which is an object with a single property `updateFirstLogin` that is a boolean indicating whether the mutation was successful.
+ */
 export const useUpdateFirstLogin = () => {
   const [updateFirstLogin, { loading, error, data }] = useMutation(UPDATE_FIRST_LOGIN, { client: apolloClient });
   return { updateFirstLogin, loading, error, data };
 };
+
+/**
+ * Hook to update a user's flag.
+ *
+ * @returns an object with the following properties:
+ * - `updateUserFlag`: a function that accepts an object with `email` and `flag` properties and returns a promise that resolves if the mutation is successful.
+ * - `loading`: a boolean indicating whether the mutation is in progress.
+ * - `error`: an error object if the mutation failed.
+ * - `data`: the result of the mutation, which is an object containing the updated user flag information.
+ */
 
 export const useUpdateUserFlag = () => {
   const [updateUserFlag, { loading, error, data }] = useMutation(UPDATE_USER_FLAG, { client: apolloClient });
