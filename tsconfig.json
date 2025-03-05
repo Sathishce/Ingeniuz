@@ -1,3 +1,14 @@
 {
-  "extends": "@react-native/typescript-config/tsconfig.json"
+  "extends": "@react-native/typescript-config/tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".", // Set base directory to project root (where tsconfig.json resides)
+    "paths": {
+      "*": ["src/*"] // Map all imports to src/ folder
+    },
+    "strictNullChecks": true, // Optional: Enforce stricter type checking
+    "noImplicitAny": true,    // Optional: Prevent implicit 'any' types
+    "types": ["node", "react-native"] // Ensure TypeScript recognizes Node and RN types
+  },
+  "include": ["src/**/*"], // Include all files in src/
+  "exclude": ["node_modules", "babel.config.js", "metro.config.js"]
 }
