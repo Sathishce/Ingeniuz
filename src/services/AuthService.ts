@@ -97,16 +97,6 @@ export const useRegisterUser = () => {
   return { register, loading, error };
 };
 
-/*************  ✨ Codeium Command ⭐  *************/
-/**
- * Hook to complete the two-factor authentication process.
- *
- * @returns an object with the following properties:
- * - `completeTwoFactor`: a function that accepts an object with `email`, `emailOtp`, and `smsOtp` properties and returns a promise that resolves to the user object for the authenticated user.
- * - `loading`: a boolean indicating whether the mutation is in progress.
- * - `error`: an error object if the mutation failed.
- */
-/******  eda248cf-7972-41ab-b951-8a022404d2c3  *******/
 export const useCompleteTwoFactor = () => {
   const [completeTwoFactor, { loading, error }] = useMutation(COMPLETE_TWO_FACTOR, { client: apolloClient });
   return { completeTwoFactor, loading, error };
